@@ -1,0 +1,24 @@
+version: '3.3'
+
+services:
+    mysql:
+        image: mysql
+        environment: 
+            MYSQL_ROOT_PASSWORD: Pwd!12345
+        volumes: 
+            - petmanagerdata:/var/lib/mysql
+        ports:
+            - 3307:3306
+        
+            
+    petmanagerapi:
+        image: petmananger:beta-1.0.1
+        build:
+            context: .            
+        ports: 
+            - 8078:80
+        depends_on:
+            - mysql
+        command: ["dockerize","-wait","tcp://mysql:3306","-timeout","600s","dotnet","PetManager.Api.dll"]
+volumes: 
+    petmanagerdata:
